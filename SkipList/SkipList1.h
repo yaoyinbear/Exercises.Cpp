@@ -1,11 +1,11 @@
 #pragma once
 
-#include<functional>
+#include <cstdlib>
 
 class SkipList
 {
 protected:
-    using CmpFunc = int(*)(void*, void*);
+    using CmpFunc = int (*)(void *, void *);
 
     struct SkipNode;
 
@@ -23,14 +23,14 @@ protected:
         SkipNode *m_prev = nullptr;
     };
 
-
 public:
-    SkipList(CmpFunc cmpFunc = [](void *a, void *b) ->int { return a < b ? -1 : a == b ? 0 : 1; });
+    SkipList(CmpFunc cmpFunc = [](void *a, void *b) -> int
+             { return a < b ? -1 : a == b ? 0
+                                          : 1; });
     ~SkipList();
 
     bool insert(long long score, void *data);
     bool remove(long long score, void *data);
-
 
 protected:
     // 层高上限
@@ -42,7 +42,7 @@ protected:
     unsigned char genLevel();
 
     // 创建有level层的节点
-    SkipNode* createNode(unsigned char level);
+    SkipNode *createNode(unsigned char level);
     // 释放节点
     void releaseNode(SkipNode *node);
 
@@ -60,4 +60,3 @@ protected:
     // 节点总数
     unsigned long m_length = 0;
 };
-

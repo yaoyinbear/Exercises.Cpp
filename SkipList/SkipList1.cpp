@@ -1,7 +1,7 @@
 #include "SkipList1.h"
 
 SkipList::SkipList(CmpFunc cmpFunc)
-    : m_cmpFunc{ cmpFunc }
+    : m_cmpFunc{cmpFunc}
 {
     m_head = createNode(MAX_LEVEL);
     m_level = 1;
@@ -19,7 +19,7 @@ SkipList::~SkipList()
 
 bool SkipList::insert(long long score, void *data)
 {
-    SkipNode* updateArray[MAX_LEVEL];
+    SkipNode *updateArray[MAX_LEVEL];
     unsigned long rankArray[MAX_LEVEL];
 
     findLastLessThan(score, data, updateArray, rankArray);
@@ -49,7 +49,7 @@ bool SkipList::insert(long long score, void *data)
         newNodeLevel.m_next = prevNodeLevel.m_next;
         prevNodeLevel.m_next = newNode;
 
-        newNodeLevel.m_span = rankArray[i] + prevNodeLevel.m_span -  rankArray[0];
+        newNodeLevel.m_span = rankArray[i] + prevNodeLevel.m_span - rankArray[0];
         prevNodeLevel.m_span = rankArray[0] - rankArray[i] + 1;
 
         if (i == 0)
@@ -84,9 +84,9 @@ bool SkipList::insert(long long score, void *data)
     return true;
 }
 
-bool SkipList::remove(long long score, void* data)
+bool SkipList::remove(long long score, void *data)
 {
-    SkipNode* updateArray[MAX_LEVEL];
+    SkipNode *updateArray[MAX_LEVEL];
     unsigned long rankArray[MAX_LEVEL];
 
     findLastLessThan(score, data, updateArray, rankArray);
@@ -135,11 +135,12 @@ bool SkipList::remove(long long score, void* data)
 unsigned char SkipList::genLevel()
 {
     unsigned char level = 1;
-    while (level < MAX_LEVEL && rand() <= LEVEL_THRESHOLD) ++level;
+    while (level < MAX_LEVEL && rand() <= LEVEL_THRESHOLD)
+        ++level;
     return level;
 }
 
-SkipList::SkipNode* SkipList::createNode(unsigned char level)
+SkipList::SkipNode *SkipList::createNode(unsigned char level)
 {
     auto node = new SkipNode;
     node->m_levelArray = new SkipLevel[level];
@@ -148,12 +149,13 @@ SkipList::SkipNode* SkipList::createNode(unsigned char level)
 
 void SkipList::releaseNode(SkipNode *node)
 {
-    if (!node) return;
+    if (!node)
+        return;
     delete[] node->m_levelArray;
     delete node;
 }
 
-void SkipList::findLastLessThan(long long score, void *data, SkipNode** updateArray, unsigned long* rankArray)
+void SkipList::findLastLessThan(long long score, void *data, SkipNode **updateArray, unsigned long *rankArray)
 {
     auto curNode = m_head;
     auto curLevel = m_level;
@@ -167,11 +169,9 @@ void SkipList::findLastLessThan(long long score, void *data, SkipNode** updateAr
         }
 
         auto nextNode = curNode->m_levelArray[curLevel - 1].m_next;
-        while (nextNode && 
-               (nextNode->m_score < score 
-                || (nextNode->m_score == score 
-                    && m_cmpFunc(nextNode->m_data, data) < 0)))
-        { 
+        while (nextNode &&
+               (nextNode->m_score < score || (nextNode->m_score == score && m_cmpFunc(nextNode->m_data, data) < 0)))
+        {
             rankArray[curLevel - 1] += curNode->m_levelArray[curLevel - 1].m_span;
             curNode = nextNode;
             nextNode = curNode->m_levelArray[curLevel - 1].m_next;
